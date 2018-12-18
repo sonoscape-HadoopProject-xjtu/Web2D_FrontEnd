@@ -66,7 +66,7 @@ export default {
   },
 
   mounted() {
-    axios.get("http://localhost:3001/api/users").then(response => {
+    axios.get("http://localhost:3001/api/userlist").then(response => {
       this.data = response.data.data;
     });
   },

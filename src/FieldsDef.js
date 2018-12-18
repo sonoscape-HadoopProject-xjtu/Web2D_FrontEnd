@@ -5,21 +5,16 @@ export default [
     name: VuetableFieldHandle
   },
   {
-    name: 'name',
-    title: '<span class="orange glyphicon glyphicon-user"></span> Full Name',
+    name: 'username',
+    title: 'Full Name',
     sortField: 'name'
   },
   {
-    name: 'email',
-    sortField: 'email'
+    name: 'userid',
+    sortField: 'userid'
   },
-  'birthdate',
-  'nickname',
-  {
-    name: 'gender',
-    formatter: (value) => {
-      return value === 'M' ? 'Male' : 'Female'
-    }
-  },
+  'userpassword',
+  'usergroup',
+  'created',
   'actions'
 ]
