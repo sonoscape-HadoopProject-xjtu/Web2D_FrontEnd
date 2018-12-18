@@ -61,16 +61,24 @@ export default {
   },
   methods: {
     submit () {
-      if (this.credentials.password === this.credentials.password_repeat) {
-        this.error = '两次密码不一致'
-      } else {
-        var credentials = {
-          username: this.credentials.username,
-          password: this.credentials.password,
-          authorization_code: this.credentials.authorization_code
-        }
-        auth.signup(this, credentials, 'secretquote')
+      if (this.credentials.authorization_code === '' || this.credentials.username === '') {
+        this.error = '认证码不能为空'
+        return
       }
+      if (this.credentials.password === '' || this.credentials.username === '') {
+        this.error = '用户名或密码不能为空'
+        return
+      }
+      if (this.credentials.password !== this.credentials.password_repeat) {
+        this.error = '两次密码不一致'
+        return
+      }
+      var credentials = {
+        username: this.credentials.username,
+        password: this.credentials.password,
+        authorization_code: this.credentials.authorization_code
+      }
+      auth.signup(this, credentials, 'secretquote')
     }
   }
 }

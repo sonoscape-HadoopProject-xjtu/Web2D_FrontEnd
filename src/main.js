@@ -7,6 +7,7 @@ import Home from '@/components/Home'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
 import SecretQuote from '@/components/SecretQuote'
+import StudyList from '@/components/StudyList'
 // import StudyList from "@/components/StudyList";
 import dwv from '@/components/dwv'
 // import 'vue-material/dist/vue-material.min.css'
@@ -58,6 +59,12 @@ const router = new VueRouter({
       path: '/signup',
       name: 'signup',
       component: Signup
+    },
+    {
+      path: '/studylist',
+      name: 'studylist',
+      component: StudyList,
+      beforeEnter: requireAuth
     },
     {
       path: '/secretquote',

@@ -1,0 +1,91 @@
+### PatientColumn
+	PatientName**
+	PatientID
+	PatientBirthDate
+	PatientSex
+	PatientAge
+	PatientWeight
+	IssuerOfPatientID
+	AdditionalPatientHistory
+	
+###	HospitalColumn
+	Modality**
+	Manufacturer
+	ManufacturerModelName
+	InstitutionName**
+	InstitutionAddress
+	StationName
+	
+### StudyColumn
+	StudyDate
+	SeriesDate
+	StudyTime
+	StudyDescription
+	SeriesDescription
+	StudyInstanceUID****
+	SeriesInstanceUID
+	StudyID
+	StudyStatusID
+	
+### PhysicianColumn
+	ReferringPhysiciansName**
+	NameOfPhysiciansReadingStudy
+	OperatorsName
+	PerformingPhysicianName
+	
+### ImageColumn
+	ImageType
+	ImageDate
+	ImageTime
+	ImageNumber**
+	SamplesPerPixel
+	PhotometricInterpretation
+	NumberOfFrames
+	Rows
+	Columns
+	PixelSpacing
+	BitsAllocated
+	BitsStored
+	HighBit
+	PixelRepresentation
+	PixelPaddingValue
+	
+### HBaseColumn
+	GSPSFilePath
+	GSPSFileName
+	GSPSFileCreateDate
+	GraphicAnnotationSequence
+	Item
+	ReferencedSOPClassUID
+	ReferencedSOPInstanceUID
+	ReferencedFrameNumber
+	TextObjectSequence
+	BoundingBoxAnnotationUnits
+	UnformattedTextValue
+	BoundingBoxTopLeftHandCorner
+	BoundingBoxBottomRightHandCorner
+	BoundingBoxTextHorizontalJustification
+	GraphicAnnotationUnits
+	GraphicDimensions
+	NumberOfGraphicPoints
+	GraphicType
+	GraphicFilled
+	
+###HBaseColumn
+	DicomFilePath**
+	DicomFileName**
+	DicomFileCreateDate**
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
