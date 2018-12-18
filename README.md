@@ -1,6 +1,4 @@
-# starter
-
-> Web2D FrontEnd Project
+# Web2D FrontEnd Project
 
 ## Build Setup
 
