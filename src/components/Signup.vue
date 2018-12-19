@@ -74,11 +74,11 @@ export default {
         return
       }
       var credentials = {
-        username: this.credentials.username,
-        password: this.credentials.password,
+        userid: this.credentials.username,
+        userpassword: this.credentials.password,
         authorization_code: this.credentials.authorization_code
       }
-      auth.signup(this, credentials, 'secretquote')
+      auth.signup(this, credentials, 'login')
     }
   }
 }

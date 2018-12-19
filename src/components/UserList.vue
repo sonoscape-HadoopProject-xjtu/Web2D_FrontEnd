@@ -1,5 +1,5 @@
 <template>
-	<div id="studylist" class="ui container">
+	<div id="userlist" class="ui container">
 		<vuetable ref="vuetable"
 			:api-mode="false"
 			:fields="fields"
@@ -8,14 +8,9 @@
       pagination-path="pagination"
 	    @vuetable:pagination-data="onPaginationData"
 		>
+      <div>123</div>
 			<div slot="actions" slot-scope="props">
 				<button
-					class="ui small button"
-					@click="onActionClicked('open-item', props.rowData)"
-				>
-					<i class="folder open icon"></i>
-				</button>
-				<!-- <button
 					class="ui small button"
 					@click="onActionClicked('edit-item', props.rowData)"
 				>
@@ -26,7 +21,7 @@
 					@click="onActionClicked('delete-item', props.rowData)"
 				>
 					<i class="delete icon"></i>
-				</button> -->
+				</button>
 			</div>
 		</vuetable>
     <div style="padding-top:10px">
@@ -40,12 +35,12 @@
 <script>
 import Vuetable from 'vuetable-2'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-import FieldsDef from '../UserFieldsDef.js'
+import UserFieldsDef from '../UserFieldsDef.js'
 // import axios from 'axios'
 import _ from 'lodash'
 
 export default {
-  id: 'studylist',
+  id: 'userlist',
   components: {
     Vuetable,
     VuetablePagination
@@ -53,8 +48,8 @@ export default {
 
   data () {
     return {
-      fields: FieldsDef,
-      perPage: 10,
+      fields: UserFieldsDef,
+      perPage: 3,
       data: []
     }
   },
@@ -113,7 +108,7 @@ export default {
       }
     },
     onActionClicked (action, data) {
-      console.log('slot actions: on-click', data.userpassword)
+      console.log('slot actions: on-click', data.name)
     }
   }
 }

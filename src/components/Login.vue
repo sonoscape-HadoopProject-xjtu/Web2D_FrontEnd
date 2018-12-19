@@ -45,7 +45,7 @@ export default {
         userid: this.credentials.userid,
         userpassword: this.credentials.userpassword
       }
-      auth.login(this, credentials, 'secretquote')
+      auth.login(this, credentials, 'studylist')
     }
   }
 }

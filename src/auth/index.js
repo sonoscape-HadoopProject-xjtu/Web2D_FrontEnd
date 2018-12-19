@@ -6,9 +6,9 @@ export default {
 
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(response => {
-      console.log(response.body.status)
-      localStorage.setItem('id_token', response.body.id_token)
       if (response.body.status) {
+        localStorage.setItem('id_token', response.body.id_token)
+        console.log(response.body.id_token)
         if (redirect) {
           context.$router.replace(redirect)
         }
@@ -22,9 +22,13 @@ export default {
 
   signup (context, creds, redirect) {
     context.$http.post(SIGNUP_URL, creds).then(response => {
-      localStorage.setItem('id_token', response.body.id_token)
-      if (redirect) {
-        context.$router.replace(redirect)
+      if (response.body.status) {
+        if (redirect) {
+          alert('注册成功，请登录！')
+          context.$router.replace(redirect)
+        }
+      } else {
+        context.error = response.body.message
       }
     }, response => {
       context.error = response.statusText
@@ -32,8 +36,13 @@ export default {
   },
 
   logout (context) {
-    localStorage.removeItem('id_token')
-    context.$router.replace('/')
+    var res = confirm('确认退出？')
+    if (res) {
+      localStorage.removeItem('id_token')
+      context.$router.replace('/')
+    } else {
+      context.$router.go(-1)
+    }
   },
 
   isAuthenticated () {

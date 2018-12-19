@@ -14,10 +14,10 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li v-if="isAuthenticated()"><router-link to="home">Home</router-link></li>
           <li v-if="!isAuthenticated()"><router-link to="login">Login</router-link></li>
           <li v-if="!isAuthenticated()"><router-link to="signup">Sign Up</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="studylist">Study List</router-link></li>
+          <li v-if="isAuthenticated()"><router-link to="userlist">User List</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="Viewer">Viewer</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="logout" @click.native="logout()">Logout</router-link></li>
         </ul>

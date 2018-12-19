@@ -3,10 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import Welcome from '@/components/Welcome'
-import Home from '@/components/Home'
+import UserList from '@/components/UserList'
 import Login from '@/components/Login'
 import Signup from '@/components/Signup'
-import SecretQuote from '@/components/SecretQuote'
 import StudyList from '@/components/StudyList'
 // import StudyList from "@/components/StudyList";
 import dwv from '@/components/dwv'
@@ -18,6 +17,9 @@ Vue.use(VueResource)
 
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
+
+import SuiVue from 'semantic-ui-vue'
+Vue.use(SuiVue)
 
 Vue.config.productionTip = true
 
@@ -45,9 +47,9 @@ const router = new VueRouter({
       component: Welcome
     },
     {
-      path: '/home',
-      name: 'home',
-      component: Home,
+      path: '/userlist',
+      name: 'userlist',
+      component: UserList,
       beforeEnter: requireAuth
     },
     {
@@ -64,12 +66,6 @@ const router = new VueRouter({
       path: '/studylist',
       name: 'studylist',
       component: StudyList,
-      beforeEnter: requireAuth
-    },
-    {
-      path: '/secretquote',
-      name: 'secretquote',
-      component: SecretQuote,
       beforeEnter: requireAuth
     },
     {
