@@ -7,7 +7,7 @@ export default {
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(response => {
       if (response.body.status) {
-        localStorage.setItem('id_token', JSON.stringify(response.body.id_token))
+        sessionStorage.setItem('id_token', JSON.stringify(response.body.id_token))
         if (redirect) {
           context.$router.replace(redirect)
         }
@@ -37,7 +37,7 @@ export default {
   logout (context) {
     var res = confirm('确认退出？')
     if (res) {
-      localStorage.removeItem('id_token')
+      sessionStorage.removeItem('id_token')
       context.$router.replace('/')
     } else {
       context.$router.go(-1)
@@ -45,7 +45,7 @@ export default {
   },
 
   isAuthenticated () {
-    var userOdj = localStorage.getItem('id_token')
+    var userOdj = sessionStorage.getItem('id_token')
     if (userOdj) {
       return true
     }
@@ -53,7 +53,7 @@ export default {
   },
 
   isAdmin () {
-    var userOdj = JSON.parse(localStorage.getItem('id_token'))
+    var userOdj = JSON.parse(sessionStorage.getItem('id_token'))
     if (userOdj) {
       if (userOdj.usergroup === 'administrator') {
         return true
@@ -67,7 +67,7 @@ export default {
 
   getAuthHeader () {
     return {
-      'Authorization': 'Bearer ' + localStorage.getItem('id_token')
+      'Authorization': 'Bearer ' + sessionStorage.getItem('id_token')
     }
   }
 }
