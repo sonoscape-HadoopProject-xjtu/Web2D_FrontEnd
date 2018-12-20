@@ -8,7 +8,6 @@ export default {
     context.$http.post(LOGIN_URL, creds).then(response => {
       if (response.body.status) {
         localStorage.setItem('id_token', JSON.stringify(response.body.id_token))
-        console.log(response.body.id_token)
         if (redirect) {
           context.$router.replace(redirect)
         }
@@ -46,11 +45,24 @@ export default {
   },
 
   isAuthenticated () {
-    var jwt = localStorage.getItem('id_token')
-    if (jwt) {
+    var userOdj = localStorage.getItem('id_token')
+    if (userOdj) {
       return true
     }
     return false
+  },
+
+  isAdmin () {
+    var userOdj = JSON.parse(localStorage.getItem('id_token'))
+    if (userOdj) {
+      if (userOdj.usergroup === 'administrator') {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
   },
 
   getAuthHeader () {

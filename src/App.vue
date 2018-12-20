@@ -17,7 +17,7 @@
           <li v-if="!isAuthenticated()"><router-link to="login">Login</router-link></li>
           <li v-if="!isAuthenticated()"><router-link to="signup">Sign Up</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="studylist">Study List</router-link></li>
-          <li v-if="isAuthenticated()"><router-link to="userlist">User List</router-link></li>
+          <li v-if="isAuthenticated() & isAdmin()"><router-link to="userlist">User List</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="Viewer">Viewer</router-link></li>
           <li v-if="isAuthenticated()"><router-link to="logout" @click.native="logout()">Logout</router-link></li>
         </ul>
@@ -47,7 +47,11 @@ export default {
     },
     isAuthenticated () {
       return auth.isAuthenticated()
+    },
+    isAdmin () {
+      return auth.isAdmin()
     }
+
   }
 }
 </script>
