@@ -7,7 +7,7 @@ export default {
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(response => {
       if (response.body.status) {
-        localStorage.setItem('id_token', response.body.id_token)
+        localStorage.setItem('id_token', JSON.stringify(response.body.id_token))
         console.log(response.body.id_token)
         if (redirect) {
           context.$router.replace(redirect)
