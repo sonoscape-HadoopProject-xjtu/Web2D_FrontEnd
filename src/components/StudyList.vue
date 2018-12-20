@@ -71,10 +71,6 @@ export default {
     }, response => {
       this.error = response.statusText
     })
-    // axios.get('/api/userlist').then(response => {
-    //   console.log(response)
-    //   this.data = response.data
-    // })
   },
 
   methods: {
@@ -113,7 +109,20 @@ export default {
       }
     },
     onActionClicked (action, data) {
-      console.log('slot actions: on-click', data.userpassword)
+      // console.log(action, data.DicomFilePath)
+      // dicomLinks = data.DicomFilePath
+      this.$emit('open-dicom')
+      var dicomLinks = ['https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm',
+        'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323707.dcm',
+        'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323563.dcm']
+      if (action === 'open-item') {
+        this.$router.push({
+          name: 'viewer',
+          params: {
+            dicomLinks
+          }
+        })
+      }
     }
   }
 }

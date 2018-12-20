@@ -9,8 +9,8 @@ import Signup from '@/components/Signup'
 import StudyList from '@/components/StudyList'
 // import StudyList from "@/components/StudyList";
 import dwv from '@/components/dwv'
-// import 'vue-material/dist/vue-material.min.css'
-// import 'vue-material/dist/theme/default.css'
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
 
 import VueResource from 'vue-resource'
 Vue.use(VueResource)
@@ -69,8 +69,8 @@ const router = new VueRouter({
       beforeEnter: requireAuth
     },
     {
-      path: '/Viewer',
-      name: 'Viewer',
+      path: '/viewer',
+      name: 'viewer',
       component: dwv,
       beforeEnter: requireAuth
     }
