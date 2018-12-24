@@ -201,7 +201,6 @@ export default {
     slider.style.display = 'none'
     document.getElementById('drawSelect').style.display = 'none'
     if (this.$route.params.dicomLinks) {
-      console.log(this.$route.params.dicomLinks)
       this.dwvApp.loadURLs(this.$route.params.dicomLinks)
     }
   },

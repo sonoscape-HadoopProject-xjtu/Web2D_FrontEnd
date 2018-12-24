@@ -1,7 +1,7 @@
-const API_URL = '/api/user/'
+const API_URL = process.env.API_ROOT + '/user/'
 const LOGIN_URL = API_URL + 'login'
 const SIGNUP_URL = API_URL + 'signup'
-
+const UPDATE_URL = API_URL + 'update'
 export default {
 
   login (context, creds, redirect) {
@@ -22,12 +22,27 @@ export default {
   signup (context, creds, redirect) {
     context.$http.post(SIGNUP_URL, creds).then(response => {
       if (response.body.status) {
+        alert('注册成功，请登录！')
         if (redirect) {
-          alert('注册成功，请登录！')
           context.$router.replace(redirect)
         }
       } else {
         context.error = response.body.message
+      }
+    }, response => {
+      context.error = response.statusText
+    })
+  },
+
+  update (context, creds, redirect) {
+    context.$http.post(UPDATE_URL, creds).then(response => {
+      if (response.body.status) {
+        alert('修改成功，请刷新！')
+        if (redirect) {
+          context.$router.replace(redirect)
+        }
+      } else {
+        alert(response.body.message)
       }
     }, response => {
       context.error = response.statusText
@@ -45,17 +60,17 @@ export default {
   },
 
   isAuthenticated () {
-    var userOdj = sessionStorage.getItem('id_token')
-    if (userOdj) {
+    var userObj = sessionStorage.getItem('id_token')
+    if (userObj) {
       return true
     }
     return false
   },
 
   isAdmin () {
-    var userOdj = JSON.parse(sessionStorage.getItem('id_token'))
-    if (userOdj) {
-      if (userOdj.usergroup === 'administrator') {
+    var userObj = JSON.parse(sessionStorage.getItem('id_token'))
+    if (userObj) {
+      if (userObj.usergroup === 'administrator') {
         return true
       } else {
         return false
@@ -66,8 +81,11 @@ export default {
   },
 
   getAuthHeader () {
-    return {
-      'Authorization': 'Bearer ' + sessionStorage.getItem('id_token')
+    var userObj = JSON.parse(sessionStorage.getItem('id_token'))
+    if (userObj) {
+      return '当前用户：' + userObj.username
+    } else {
+      return '未登录'
     }
   }
 }

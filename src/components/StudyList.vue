@@ -1,21 +1,19 @@
 <template>
-	<div id="studylist" class="ui container">
-		<vuetable ref="vuetable"
-			:api-mode="false"
-			:fields="fields"
+  <div id="studylist" class="ui container">
+    <vuetable
+      ref="vuetable"
+      :api-mode="false"
+      :fields="fields"
       :per-page="perPage"
-			:data-manager="dataManager"
+      :data-manager="dataManager"
       pagination-path="pagination"
-	    @vuetable:pagination-data="onPaginationData"
-		>
-			<div slot="actions" slot-scope="props">
-				<button
-					class="ui small button"
-					@click="onActionClicked('open-item', props.rowData)"
-				>
-					<i class="folder open icon"></i>
-				</button>
-				<!-- <button
+      @vuetable:pagination-data="onPaginationData"
+    >
+      <div slot="actions" slot-scope="props">
+        <button class="ui small button" @click="onActionClicked('open-item', props.rowData)">
+          <i class="folder open icon"></i>
+        </button>
+        <!-- <button
 					class="ui small button"
 					@click="onActionClicked('edit-item', props.rowData)"
 				>
@@ -26,24 +24,22 @@
 					@click="onActionClicked('delete-item', props.rowData)"
 				>
 					<i class="delete icon"></i>
-				</button> -->
-			</div>
-		</vuetable>
+        </button>-->
+      </div>
+    </vuetable>
     <div style="padding-top:10px">
-      <vuetable-pagination ref="pagination"
-        @vuetable-pagination:change-page="onChangePage"
-      ></vuetable-pagination>
+      <vuetable-pagination ref="pagination" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
     </div>
-	</div>
+  </div>
 </template>
 
 <script>
 import Vuetable from 'vuetable-2'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
-import FieldsDef from '../UserFieldsDef.js'
+import FieldsDef from '../DicomFieldsDef.js'
 // import axios from 'axios'
 import _ from 'lodash'
-
+const API = process.env.API_ROOT
 export default {
   id: 'studylist',
   components: {
@@ -66,11 +62,14 @@ export default {
   },
 
   mounted () {
-    this.$http.get('/api/userlist').then(response => {
-      this.data = response.data
-    }, response => {
-      this.error = response.statusText
-    })
+    this.$http.get(API + '/studylist').then(
+      response => {
+        this.data = response.data
+      },
+      response => {
+        this.error = response.statusText
+      }
+    )
   },
 
   methods: {
@@ -109,13 +108,28 @@ export default {
       }
     },
     onActionClicked (action, data) {
-      // console.log(action, data.DicomFilePath)
-      // dicomLinks = data.DicomFilePath
-      this.$emit('open-dicom')
-      var dicomLinks = ['https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm',
-        'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323707.dcm',
-        'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323563.dcm']
       if (action === 'open-item') {
+        // this.$http.post('/api/studylist', data.UID).then(response => {})
+        // var dicomLinks = [
+        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm',
+        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323707.dcm',
+        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323563.dcm'
+        // ]
+        var dicomLinks = []
+        data.DicomFilePath.split(',').forEach(dicomPath => {
+          var orginLink = 'http://106.14.188.106:50070/webhdfs/v1' + dicomPath + '?op=OPEN'
+          // this.$http.setPaginationData
+          // this.$http({
+          //   method: 'GET',
+          //   url: orginLink,
+          //   header: {
+          //     'Access-Control-Allow-Origin': '*'
+          //   }
+          // }).then(response => {
+          //   console.log(response.get('location'))
+          // })
+          dicomLinks.push(orginLink)
+        })
         this.$router.push({
           name: 'viewer',
           params: {
@@ -138,7 +152,7 @@ export default {
 }
 button.ui.button {
   padding: 8px 3px 8px 10px;
-	margin-top: 1px;
-	margin-bottom: 1px;
+  margin-top: 1px;
+  margin-bottom: 1px;
 }
 </style>

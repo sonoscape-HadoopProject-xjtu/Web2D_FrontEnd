@@ -1,7 +1,7 @@
 export default [
   {
     name: 'StudyInstanceUID',
-    title: '档案列表',
+    title: '检查实例号',
     sortField: 'StudyInstanceUID'
   },
   {
@@ -18,8 +18,12 @@ export default [
     title: '图像数'
   },
   {
-    name: 'DicomFileCreateDate',
-    title: '创建日期'
+    name: 'StudyDate',
+    title: '检查日期'
+  },
+  {
+    name: 'InstitutionName',
+    title: '检查医院'
   },
   {
     name: '__slot:actions',

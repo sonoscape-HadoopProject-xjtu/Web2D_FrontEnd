@@ -7,7 +7,7 @@
 
 <script>
 import auth from '../auth'
-
+const API = process.env.API_ROOT
 export default {
   data () {
     return {
@@ -19,7 +19,7 @@ export default {
   },
   methods: {
     getUserInfo () {
-      this.$http.get('/api/user/info', {headers: auth.getAuthHeader()})
+      this.$http.get(API + '/user/info', {headers: auth.getAuthHeader()})
       .then(response => {
         this.userinfo = response.body
       }, response => {

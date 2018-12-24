@@ -17,8 +17,17 @@
       <input
         type='text'
         class='form-control'
-        placeholder='Enter your username'
+        placeholder='Enter your name'
         v-model='credentials.username'
+        v-on:keyup.enter='submit'
+      >
+    </div>
+    <div class='form-group'>
+      <input
+        type='text'
+        class='form-control'
+        placeholder='Enter your userid'
+        v-model='credentials.userid'
         v-on:keyup.enter='submit'
       >
     </div>
@@ -52,6 +61,7 @@ export default {
     return {
       credentials: {
         username: '',
+        userid: '',
         password: '',
         password_repeat: '',
         authorization_code: ''
@@ -65,7 +75,7 @@ export default {
         this.error = '认证码不能为空'
         return
       }
-      if (this.credentials.password === '' || this.credentials.username === '') {
+      if (this.credentials.password === '' || this.credentials.userid === '' || this.credentials.username === '') {
         this.error = '用户名或密码不能为空'
         return
       }
@@ -74,7 +84,8 @@ export default {
         return
       }
       var credentials = {
-        userid: this.credentials.username,
+        username: this.credentials.username,
+        userid: this.credentials.userid,
         userpassword: this.credentials.password,
         authorization_code: this.credentials.authorization_code
       }

@@ -1,6 +1,5 @@
 <template>
 <div id="app">
-
   <nav class="navbar navbar-default navbar-static-top">
     <div class="container">
       <div class="navbar-header">
@@ -23,6 +22,7 @@
         </ul>
       </div>
     </div>
+    <div></div>
   </nav>
 
   <div class="container">

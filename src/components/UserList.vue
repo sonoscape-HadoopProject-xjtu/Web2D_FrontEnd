@@ -29,6 +29,36 @@
         @vuetable-pagination:change-page="onChangePage"
       ></vuetable-pagination>
     </div>
+    <!-- user edit -->
+    <md-dialog :md-active.sync="showEditDialog">
+      <div id='userEditDialog'>
+      <h1>用户信息修改</h1>
+      <md-field>
+        <label>User ID</label>
+        <md-input v-model="userid" readonly></md-input>
+      </md-field>
+      <md-field>
+        <label>User Name</label>
+        <md-input v-model="username"></md-input>
+      </md-field>
+      <md-field>
+        <label for="usergroup">User Group</label>
+        <md-select v-model="usergroup" name="usergroup" id="usergroup">
+          <md-option value="administrator">administrator</md-option>
+          <md-option value="doctor">doctor</md-option>
+        </md-select>
+      </md-field>
+      <md-field>
+        <label>Password</label>
+        <md-input type="password" v-model="userpassword"></md-input>
+      </md-field>
+      <md-dialog-actions>
+        <md-button class="md-primary" @click="showEditDialog = false">关闭</md-button>
+        <md-button class="md-primary" @click="updateUserInfo">保存</md-button>
+      </md-dialog-actions>
+      </div>
+    </md-dialog>
+
 	</div>
 </template>
 
@@ -36,9 +66,10 @@
 import Vuetable from 'vuetable-2'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import UserFieldsDef from '../UserFieldsDef.js'
+import auth from '../auth'
 // import axios from 'axios'
 import _ from 'lodash'
-
+const API = process.env.API_ROOT
 export default {
   id: 'userlist',
   components: {
@@ -50,7 +81,12 @@ export default {
     return {
       fields: UserFieldsDef,
       perPage: 3,
-      data: []
+      data: [],
+      showEditDialog: false,
+      userid: null,
+      username: null,
+      usergroup: null,
+      userpassword: null
     }
   },
 
@@ -61,7 +97,7 @@ export default {
   },
 
   mounted () {
-    this.$http.get('/api/userlist').then(response => {
+    this.$http.get(API + '/userlist').then(response => {
       this.data = response.data
     }, response => {
       this.error = response.statusText
@@ -108,7 +144,37 @@ export default {
       }
     },
     onActionClicked (action, data) {
-      console.log('slot actions: on-click', data.name)
+      if (action === 'edit-item') {
+        this.userid = data.userid
+        this.username = data.username
+        this.usergroup = data.usergroup
+        this.userpassword = data.userpassword
+        this.showEditDialog = true
+      } else {
+        var res = confirm('确认删除用户:' + data.username + '？(该操作无法恢复)')
+        if (res) {
+          this.$http.post(API + '/user/delete', data.userid).then(response => {
+            if (response.body.status) {
+              alert(response.body.message)
+              this.$router.replace('userlist')
+            } else {
+              alert(response.body.message)
+              this.$router.replace('userlist')
+            }
+          })
+        }
+      }
+    },
+    updateUserInfo () {
+      this.showEditDialog = false
+      console.log('save')
+      var credentials = {
+        username: this.username,
+        userid: this.userid,
+        userpassword: this.password,
+        usergroup: this.usergroup
+      }
+      auth.update(this, credentials, 'userlist')
     }
   }
 }
@@ -126,5 +192,8 @@ button.ui.button {
   padding: 8px 3px 8px 10px;
 	margin-top: 1px;
 	margin-bottom: 1px;
+}
+#userEditDialog {
+  margin: 2rem;
 }
 </style>
