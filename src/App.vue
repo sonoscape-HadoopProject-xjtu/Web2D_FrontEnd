@@ -22,11 +22,13 @@
         </ul>
       </div>
     </div>
-    <div></div>
   </nav>
 
   <div class="container">
     <router-view></router-view>
+  </div>
+  <div id="footer">
+    {{footInfo}}
   </div>
 </div>
 </template>
@@ -38,9 +40,12 @@ export default {
 
   data () {
     return {
+      footInfo: null
     }
   },
-
+  updated () {
+    this.footInfo = auth.getAuthHeader()
+  },
   methods: {
     logout () {
       auth.logout(this)
@@ -51,7 +56,13 @@ export default {
     isAdmin () {
       return auth.isAdmin()
     }
-
   }
 }
 </script>
+
+<style scoped>
+div#footer {
+  text-align: center;
+  color: rgb(202, 202, 202);
+}
+</style>

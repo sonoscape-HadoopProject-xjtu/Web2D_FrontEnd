@@ -109,25 +109,9 @@ export default {
     },
     onActionClicked (action, data) {
       if (action === 'open-item') {
-        // this.$http.post('/api/studylist', data.UID).then(response => {})
-        // var dicomLinks = [
-        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323851.dcm',
-        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323707.dcm',
-        //   'https://raw.githubusercontent.com/ivmartel/dwv/master/tests/data/bbmri-53323563.dcm'
-        // ]
         var dicomLinks = []
         data.DicomFilePath.split(',').forEach(dicomPath => {
           var orginLink = 'http://106.14.188.106:50070/webhdfs/v1' + dicomPath + '?op=OPEN'
-          // this.$http.setPaginationData
-          // this.$http({
-          //   method: 'GET',
-          //   url: orginLink,
-          //   header: {
-          //     'Access-Control-Allow-Origin': '*'
-          //   }
-          // }).then(response => {
-          //   console.log(response.get('location'))
-          // })
           dicomLinks.push(orginLink)
         })
         this.$router.push({

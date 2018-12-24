@@ -7,7 +7,7 @@ export default {
   login (context, creds, redirect) {
     context.$http.post(LOGIN_URL, creds).then(response => {
       if (response.body.status) {
-        sessionStorage.setItem('id_token', JSON.stringify(response.body.id_token))
+        localStorage.setItem('id_token', JSON.stringify(response.body.id_token))
         if (redirect) {
           context.$router.replace(redirect)
         }
@@ -52,7 +52,7 @@ export default {
   logout (context) {
     var res = confirm('确认退出？')
     if (res) {
-      sessionStorage.removeItem('id_token')
+      localStorage.removeItem('id_token')
       context.$router.replace('/')
     } else {
       context.$router.go(-1)
@@ -60,7 +60,7 @@ export default {
   },
 
   isAuthenticated () {
-    var userObj = sessionStorage.getItem('id_token')
+    var userObj = localStorage.getItem('id_token')
     if (userObj) {
       return true
     }
@@ -68,7 +68,7 @@ export default {
   },
 
   isAdmin () {
-    var userObj = JSON.parse(sessionStorage.getItem('id_token'))
+    var userObj = JSON.parse(localStorage.getItem('id_token'))
     if (userObj) {
       if (userObj.usergroup === 'administrator') {
         return true
@@ -81,11 +81,11 @@ export default {
   },
 
   getAuthHeader () {
-    var userObj = JSON.parse(sessionStorage.getItem('id_token'))
+    var userObj = JSON.parse(localStorage.getItem('id_token'))
     if (userObj) {
-      return '当前用户：' + userObj.username
+      return '当前用户：' + userObj.username + '  所属用户组：' + (userObj.usergroup === 'administrator' ? '管理员' : '一般用户')
     } else {
-      return '未登录'
+      return ''
     }
   }
 }
