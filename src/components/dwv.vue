@@ -243,38 +243,57 @@ export default {
 
     saveDraws: function () {
       var drawings = this.dwvApp.getDrawController().getDrawLayer().toObject()
-      var drawingsDetails = this.dwvApp.getDrawDisplayDetails()
+      var drawingsDetails = this.dwvApp.getDrawStoreDetails()
+      var ReferencedStudyInstanceUID = this.dwvApp.getTags().filter(tag => {
+        return tag.name === 'StudyInstanceUID'
+      })[0].value
+      var AnnotationFileCreationDate = Date.now()
+      var SOPInstanceUID = ReferencedStudyInstanceUID + Date.now()
+      var AnnotationFileName = ReferencedStudyInstanceUID + Date.now() + '.json'
+      var SOPClassUID = '1.2.840.10008.5.1.4.1.1.11.1'
+
       var drawingJson = {
+        ReferencedStudyInstanceUID,
+        AnnotationFileCreationDate,
+        AnnotationFileName,
+        SOPInstanceUID,
+        SOPClassUID,
         drawings,
         drawingsDetails
       }
-      // this.$http.post(API + '/savedraws', drawingJson).then(
-      //   response => {
-      //     if (response.body.status) {
-      //       alert('保存成功！')
-      //     } else {
-      //       alert(response.body.message)
-      //     }
-      //   },
-      //   response => {
-      //     alert('保存失败！')
-      //   }
-      // )
-      console.log(this.dwvApp.getTags())
       console.log(drawingJson)
-    },
-
-    setDraws: function () {
-      this.$http.get(API + '/getdraws').then(
+      this.$http.post(API + '/savedraws', drawingJson).then(
         response => {
           if (response.body.status) {
-            alert('保存成功！')
+            alert(response.body.message)
           } else {
             alert(response.body.message)
           }
         },
         response => {
-          alert('获取信息失败！')
+          alert('保存失败！')
+        }
+      )
+    },
+
+    setDraws: function () {
+      var ReferencedStudyInstanceUID = this.dwvApp.getTags().filter(tag => {
+        return tag.name === 'StudyInstanceUID'
+      })[0].value
+      this.$http.post(API + '/getdraws', ReferencedStudyInstanceUID).then(
+        response => {
+          if (response.body.status) {
+            var drawings = response.body.item.drawings
+            var drawingsDetails = response.body.item.drawingsDetails
+            console.log(drawings)
+            console.log(drawingsDetails)
+            this.dwvApp.setDrawings(drawings, drawingsDetails)
+          } else {
+            alert(response.body.message)
+          }
+        },
+        response => {
+          alert('获取标注失败！')
         }
       )
     }
