@@ -8,7 +8,7 @@
       <canvas class="imageLayer">Only for HTML5 compatible browsers...</canvas>
       <div class="drawDiv"></div>
     </div>
-    <input type="range" id="scrollRange" value="0">
+    <input type="range" id="scrollRange" value="0" readonly>
     <div class="button-row">
       <!-- action buttons -->
       <md-menu md-size="medium" md-align-trigger>
@@ -62,7 +62,7 @@
       </div>
       <div id="saveDrawsBtn">
         <md-button class="md-raised md-primary" v-on:click="saveDraws" :disabled="!dataLoaded">Save Draws</md-button>
-        <md-button class="md-raised md-primary" v-on:click="setDraws" :disabled="!dataLoaded">Set Draws</md-button>
+        <md-button class="md-raised md-primary" v-on:click="loadDraws" :disabled="!dataLoaded">Load Draws</md-button>
       </div>
       <!-- dicom tags dialog-->
       <md-dialog :md-active.sync="showDicomTags">
@@ -278,7 +278,7 @@ export default {
       )
     },
 
-    setDraws: function () {
+    loadDraws: function () {
       var ReferencedStudyInstanceUID = this.dwvApp.getTags().filter(tag => {
         return tag.name === 'StudyInstanceUID'
       })[0].value
@@ -290,12 +290,13 @@ export default {
             console.log(drawings)
             console.log(drawingsDetails)
             this.dwvApp.setDrawings(drawings, drawingsDetails)
+            alert('载入标注成功！')
           } else {
             alert(response.body.message)
           }
         },
         response => {
-          alert('获取标注失败！')
+          alert('载入标注失败！')
         }
       )
     }
