@@ -60,6 +60,10 @@
         <md-button class="md-raised md-primary" v-on:click="getWindow" :disabled="!dataLoaded">Get</md-button>
         <md-button class="md-raised md-primary" v-on:click="setWindow" :disabled="!dataLoaded">Set</md-button>
       </div>
+      <div id="saveDrawsBtn">
+        <md-button class="md-raised md-primary" v-on:click="saveDraws" :disabled="!dataLoaded">Save Draws</md-button>
+        <md-button class="md-raised md-primary" v-on:click="setDraws" :disabled="!dataLoaded">Set Draws</md-button>
+      </div>
       <!-- dicom tags dialog-->
       <md-dialog :md-active.sync="showDicomTags">
         <tagsTable :tagsData="tags"/>
@@ -74,7 +78,7 @@ import Vue from 'vue'
 import MdButton from 'vue-material'
 import dwv from 'dwv'
 import tagsTable from './tags-table'
-
+const API = process.env.API_ROOT
 Vue.use(MdButton)
 
 // gui overrides
@@ -214,23 +218,65 @@ export default {
       this.selectedTool = tool
       this.dwvApp.onChangeTool({ currentTarget: { value: tool } })
     },
+
     onChangeShape: function (shape) {
       this.selectedShape = shape
       this.dwvApp.onChangeShape({ currentTarget: { value: shape } })
     },
+
     onReset: function () {
       this.dwvApp.onDisplayReset()
     },
+
     getWindow: function () {
       this.windowCenter = this.dwvApp
         .getViewController()
         .getWindowLevel().center
       this.windowWidth = this.dwvApp.getViewController().getWindowLevel().width
     },
+
     setWindow: function () {
       this.dwvApp
         .getViewController()
         .setWindowLevel(this.windowCenter, this.windowWidth)
+    },
+
+    saveDraws: function () {
+      var drawings = this.dwvApp.getDrawController().getDrawLayer().toObject()
+      var drawingsDetails = this.dwvApp.getDrawDisplayDetails()
+      var drawingJson = {
+        drawings,
+        drawingsDetails
+      }
+      // this.$http.post(API + '/savedraws', drawingJson).then(
+      //   response => {
+      //     if (response.body.status) {
+      //       alert('保存成功！')
+      //     } else {
+      //       alert(response.body.message)
+      //     }
+      //   },
+      //   response => {
+      //     alert('保存失败！')
+      //   }
+      // )
+      console.log(this.dwvApp.getTags())
+      console.log(drawingJson)
+    },
+
+    setDraws: function () {
+      this.$http.get(API + '/getdraws').then(
+        response => {
+          if (response.body.status) {
+            alert('保存成功！')
+          } else {
+            alert(response.body.message)
+          }
+        },
+        response => {
+          alert('获取信息失败！')
+        }
+      )
     }
   }
 }

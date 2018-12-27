@@ -151,6 +151,11 @@ export default {
         this.userpassword = data.userpassword
         this.showEditDialog = true
       } else {
+        var userObj = JSON.parse(localStorage.getItem('id_token'))
+        if (userObj.userid === this.userid) {
+          alert('禁止删除自身！')
+          return
+        }
         var res = confirm('确认删除用户:' + data.username + '？(该操作无法恢复)')
         if (res) {
           this.$http.post(API + '/user/delete', data.userid).then(response => {
@@ -166,8 +171,6 @@ export default {
       }
     },
     updateUserInfo () {
-      this.showEditDialog = false
-      console.log('save')
       var credentials = {
         username: this.username,
         userid: this.userid,
