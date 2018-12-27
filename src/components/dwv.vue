@@ -82,6 +82,8 @@ const API = process.env.API_ROOT
 Vue.use(MdButton)
 
 // gui overrides
+// Prompt
+dwv.gui.prompt = dwv.gui.base.prompt
 // Url loader
 dwv.gui.UrlLoad = dwv.gui.base.UrlLoad
 // decode query
