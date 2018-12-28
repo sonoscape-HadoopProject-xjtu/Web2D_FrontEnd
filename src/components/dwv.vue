@@ -235,12 +235,16 @@ export default {
         .getViewController()
         .getWindowLevel().center
       this.windowWidth = this.dwvApp.getViewController().getWindowLevel().width
+      console.log(this.windowCenter)
+      console.log(this.windowWidth)
     },
 
     setWindow: function () {
+      console.log(this.windowCenter)
+      console.log(this.windowWidth)
       this.dwvApp
         .getViewController()
-        .setWindowLevel(this.windowCenter, this.windowWidth)
+        .setWindowLevel(parseInt(this.windowCenter), parseInt(this.windowWidth))
     },
 
     saveDraws: function () {
