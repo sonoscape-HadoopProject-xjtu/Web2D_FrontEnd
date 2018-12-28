@@ -100,12 +100,8 @@ export default {
     this.$http.get(API + '/userlist').then(response => {
       this.data = response.data
     }, response => {
-      this.error = response.statusText
+      alert(response.statusText)
     })
-    // axios.get('/api/userlist').then(response => {
-    //   console.log(response)
-    //   this.data = response.data
-    // })
   },
 
   methods: {

@@ -62,12 +62,14 @@ export default {
   },
 
   mounted () {
+    console.log('trying')
     this.$http.get(API + '/studylist').then(
       response => {
+        console.log(response.data)
         this.data = response.data
       },
       response => {
-        this.error = response.statusText
+        alert(response.statusText)
       }
     )
   },

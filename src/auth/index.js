@@ -39,7 +39,7 @@ export default {
       if (response.body.status) {
         alert('修改成功，请刷新！')
         if (redirect) {
-          context.$router.replace(redirect)
+          context.$router.go(0)
         }
       } else {
         alert(response.body.message)
