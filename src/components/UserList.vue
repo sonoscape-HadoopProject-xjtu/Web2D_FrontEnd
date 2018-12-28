@@ -157,10 +157,10 @@ export default {
           this.$http.post(API + '/user/delete', data.userid).then(response => {
             if (response.body.status) {
               alert(response.body.message)
-              this.$router.replace('userlist')
+              this.$router.go(0)
             } else {
               alert(response.body.message)
-              this.$router.replace('userlist')
+              this.$router.go(0)
             }
           })
         }
@@ -174,6 +174,7 @@ export default {
         usergroup: this.usergroup
       }
       auth.update(this, credentials, 'userlist')
+      this.showEditDialog = false
     }
   }
 }

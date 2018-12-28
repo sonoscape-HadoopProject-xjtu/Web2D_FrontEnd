@@ -37,15 +37,13 @@ export default {
   update (context, creds, redirect) {
     context.$http.post(UPDATE_URL, creds).then(response => {
       if (response.body.status) {
-        alert('修改成功，请刷新！')
-        if (redirect) {
-          context.$router.go(0)
-        }
+        alert('修改成功！')
+        context.$router.go(0)
       } else {
         alert(response.body.message)
       }
     }, response => {
-      context.error = response.statusText
+      alert(response.statusText)
     })
   },
 
