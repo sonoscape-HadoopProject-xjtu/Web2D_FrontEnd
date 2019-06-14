@@ -21,12 +21,7 @@
         </md-menu-content>
       </md-menu>
       <md-menu md-size="medium" md-align-trigger>
-        <md-button
-          id="drawSelect"
-          class="md-raised md-primary"
-          md-menu-trigger
-          :disabled="!dataLoaded"
-        >
+        <md-button id="drawSelect" class="md-raised md-primary" md-menu-trigger :disabled="!dataLoaded" >
           {{ selectedShape }}
           <md-icon>arrow_drop_down</md-icon>
         </md-button>
@@ -64,6 +59,20 @@
         <md-button class="md-raised md-primary" v-on:click="saveDraws" :disabled="!dataLoaded">Save Draws</md-button>
         <md-button class="md-raised md-primary" v-on:click="loadDraws" :disabled="!dataLoaded">Load Draws</md-button>
       </div>
+      <div id="headDetection">
+        <md-progress-spinner align-items='center' id='waitbar' class="md-raised md-primary" :md-diameter="15" :md-stroke="2" md-mode="indeterminate"></md-progress-spinner>
+        <md-menu md-size="medium" md-align-trigger>
+          <md-button class="md-raised md-primary" md-menu-trigger :disabled="!dataLoaded">
+            {{ selectedMethod }}
+            <md-icon>arrow_drop_down</md-icon>
+          </md-button>
+          <md-menu-content>
+            <md-menu-item v-for="method in methods" :key="method" v-on:click="onChangeMethod(method)">{{ method }}</md-menu-item>
+          </md-menu-content>
+        </md-menu>
+        <md-button class="md-raised md-primary" v-on:click="detect" :disabled="!dataLoaded">Detect</md-button>
+      </div>
+
       <!-- dicom tags dialog-->
       <md-dialog :md-active.sync="showDicomTags">
         <tagsTable :tagsData="tags"/>
@@ -117,7 +126,9 @@ export default {
       windowWidth: 0,
       dwvApp: null,
       tools: ['Scroll', 'ZoomAndPan', 'WindowLevel', 'Draw'],
+      methods: ['Head Detection', 'Future Work'],
       selectedTool: 'Select Tool',
+      selectedMethod: 'Select Method',
       shapes: [
         'Arrow',
         'Ruler',
@@ -129,7 +140,7 @@ export default {
       ],
       selectedShape: 'Select Shape',
       loadProgress: 0,
-      dataLoaded: false,
+      dataLoaded: true,
       tags: null,
       showDicomTags: false
     }
@@ -209,6 +220,7 @@ export default {
     if (this.$route.params.dicomLinks) {
       this.dwvApp.loadURLs(this.$route.params.dicomLinks)
     }
+    document.getElementById('waitbar').style.display = 'none'
   },
   methods: {
     onChangeTool: function (tool) {
@@ -219,6 +231,10 @@ export default {
       }
       this.selectedTool = tool
       this.dwvApp.onChangeTool({ currentTarget: { value: tool } })
+    },
+
+    onChangeMethod: function (method) {
+      this.selectedMethod = method
     },
 
     onChangeShape: function (shape) {
@@ -303,6 +319,11 @@ export default {
           alert('载入标注失败！')
         }
       )
+    },
+
+    detect: function () {
+      // TODO:
+      document.getElementById('waitbar').style.display = 'inline-flex'
     }
   }
 }
