@@ -70,7 +70,7 @@
             <md-menu-item v-for="method in methods" :key="method" v-on:click="onChangeMethod(method)">{{ method }}</md-menu-item>
           </md-menu-content>
         </md-menu>
-        <md-button class="md-raised md-primary" v-on:click="detect" :disabled="!dataLoaded">Detect</md-button>
+        <md-button class="md-raised md-primary" v-on:click="detect()" :disabled="!dataLoaded">Detect</md-button>
       </div>
 
       <!-- dicom tags dialog-->
@@ -88,6 +88,8 @@ import MdButton from 'vue-material'
 import dwv from 'dwv'
 import tagsTable from './tags-table'
 const API = process.env.API_ROOT
+// const MODEL_SERVER = '//47.103.106.241/deepserver'
+const MODEL_SERVER = '//127.0.0.1:5000/deepserver'
 Vue.use(MdButton)
 
 // gui overrides
@@ -140,9 +142,10 @@ export default {
       ],
       selectedShape: 'Select Shape',
       loadProgress: 0,
-      dataLoaded: true,
+      dataLoaded: false,
       tags: null,
-      showDicomTags: false
+      showDicomTags: false,
+      DcmNo: 1
     }
   },
   mounted () {
@@ -180,16 +183,17 @@ export default {
         self.selectedTool = 'Scroll'
         slider.style.display = 'inline'
         if (!self.dwvApp.isMonoSliceData()) {
-          slider.max =
-            self.dwvApp
-              .getImage()
-              .getGeometry()
-              .getSize()
-              .getNumberOfSlices() - 1
+          slider.max = self.dwvApp.getImage().getGeometry().getSize().getNumberOfSlices() - 1
         } else {
           slider.max = self.dwvApp.getImage().getNumberOfFrames() - 1
         }
       }
+      var size = {
+        width: self.dwvApp.getImage().getGeometry().getSize().getNumberOfColumns(),
+        height: self.dwvApp.getImage().getGeometry().getSize().getNumberOfRows()
+      }
+      console.log(size)
+      self.dwvApp.fitToSize(size)
     })
 
     this.dwvApp.addEventListener('slice-change', function () {
@@ -199,22 +203,6 @@ export default {
       slider.value = self.dwvApp.getViewController().getCurrentFrame()
     })
 
-    // this.dwvApp.addEventListener('wl-center-change', function () {
-    //   self.windowCenter = self.dwvApp.getViewController().getWindowLevel().center
-    // })
-    // this.dwvApp.addEventListener('wl-width-change', function () {
-    //   self.windowWidth = self.dwvApp.getViewController().getWindowLevel().width
-    // })
-    // slider.oninput = function () {
-    //   // self.dwvApp.getViewController().setCurrentFrame(self.value)
-    //   if (isMonoSlice) {
-    //     self.dwvApp.getViewController().setCurrentFrame(self.value)
-    //   } else {
-    //     var pos = self.dwvApp.getViewController().getCurrentPosition()
-    //     pos.k = self.value
-    //     self.dwvApp.getViewController().setCurrentPosition(pos)
-    //   }
-    // }
     slider.style.display = 'none'
     document.getElementById('drawSelect').style.display = 'none'
     if (this.$route.params.dicomLinks) {
@@ -322,8 +310,56 @@ export default {
     },
 
     detect: function () {
-      // TODO:
+      if (this.dataLoaded === false) {
+        alert('图像未加载.')
+        return
+      }
+      if (this.selectedMethod !== 'Head Detection') {
+        alert('请选择正确的方法.')
+        return
+      }
       document.getElementById('waitbar').style.display = 'inline-flex'
+      var c = this.dwvApp.getImageLayer()
+      var img = c.getContext().getImageData(0, 0, c.getCanvas().width, c.getCanvas().height)
+      console.log(img)
+
+      let formData = new FormData()
+      formData.append('image', img.data)
+      formData.append('width', img.width)
+      formData.append('height', img.height)
+      console.log(formData)
+
+      var drawLayer = this.dwvApp.getDrawController().getDrawLayer()
+      var self = this
+      this.$http.post(MODEL_SERVER + '/detectHead', formData).then(response => {
+        var idx
+        var res = response.body
+        var resList = res.split(';')
+        for (idx in resList) {
+          if (resList[idx].length !== 0) {
+            console.log(resList[idx])
+            var box = resList[idx].split(',').map(Number)
+            console.log(box)
+            var shapeGroup = new dwv.tool.RectangleFactory.prototype.create([new dwv.math.Point2D(box[0], box[1]), new dwv.math.Point2D(box[2], box[3])], self.dwvApp.getStyle(), self.dwvApp.getImage())
+            drawLayer.add(shapeGroup)
+            drawLayer.draw()
+            document.getElementById('waitbar').style.display = 'none'
+          }
+        }
+      })
+      var drawings = this.dwvApp.getDrawController().getDrawLayer().toObject()
+      console.log(drawings)
+      var drawingsDetails = this.dwvApp.getDrawStoreDetails()
+      console.log(drawingsDetails)
+      // // TODO:
+      // setTimeout(function () {
+      //   document.getElementById('waitbar').style.display = 'none'
+      //   console.log(self.dwvApp.getTags())
+      //   var link = 'http://192.168.1.109/dcm/' + self.DcmNo + 'new.dcm'
+      //   self.DcmNo = self.DcmNo + self.DcmNo + 2
+      //   self.dwvApp.loadURLs([link])
+      // }, Math.floor(2000 + 2000 * Math.random()))
+      // document.getElementById('waitbar').style.display = 'inline-flex'
     }
   }
 }
